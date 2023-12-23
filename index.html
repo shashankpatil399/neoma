@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" id="cityInput" placeholder="Enter city name" spellcheck="false">
+            <button onclick="fetchWeather()">Search</button>
+        </div>
+        <div class="error">Invalid City Name</div>
+        <div class="weather">
+            <img src="" id="weatherIcon" class="weather-icon" alt="">
+            <h1 class="temp" id="temperature">22°C</h1>
+            <h2 class="city" id="location">New Delhi</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="weather-app-img/images/humidity.png" alt="">
+                    <div>
+                        <p class="humidity" id="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="weather-app-img/images/wind.png" alt="">
+                    <div>
+                        <p class="wind" id="windSpeed">15Km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchWeather() {
+            const apiKey = "d652a6f740150e546457a6b163b84666";
+            const apiUrl = "/api/weather"; 
+
+            const cityInput = document.getElementById("cityInput").value;
+            const weatherIcon = document.getElementById("weatherIcon");
+            const temperature = document.getElementById("temperature");
+            const location = document.getElementById("location");
+            const humidity = document.getElementById("humidity");
+            const windSpeed = document.getElementById("windSpeed");
+
+            try {
+                const response = await fetch(`${apiUrl}/${cityInput}`);
+                const data = await response.json();
+
+                
+                location.innerHTML = data.location;
+                temperature.innerHTML = `${Math.round(data.temperature)}°C`;
+                humidity.innerHTML = `${data.humidity}%`;
+                windSpeed.innerHTML = `${data.windSpeed}Km/h`;
+
+               
+                if (data.weatherIcon === "Clouds") {
+                    weatherIcon.src = "weather-app-img/images/clouds.png";
+                } else if (data.weatherIcon === "Rain") {
+                    weatherIcon.src = "weather-app-img/images/rain.png";
+                } else if (data.weatherIcon === "Drizzle") {
+                    weatherIcon.src = "weather-app-img/images/drizzle.png";
+                } else if (data.weatherIcon === "Mist") {
+                    weatherIcon.src = "weather-app-img/images/mist.png";
+                } else if (data.weatherIcon === "Clear") {
+                    weatherIcon.src = "weather-app-img/images/clear.png";
+                }
+
+                
+                document.querySelector(".weather").style.display = "block";
+                document.querySelector(".error").style.display = "none";
+            } catch (error) {
+                console.error(error);
+
+                
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".weather").style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
